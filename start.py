@@ -1,4 +1,4 @@
-import os, discord, random, sys, asyncio, subprocess
+import os, discord, random, sys, asyncio, subprocess, yt_dlp
 from dotenv import load_dotenv
 from discord import FFmpegPCMAudio, TextChannel
 from discord.ext import commands
@@ -9,7 +9,7 @@ from discord.utils import get
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client(intents=discord.Intents.all())
+client = commands.Bot(command_prefix='6', intents=discord.Intents.all())
 
 
 
@@ -40,6 +40,26 @@ async def on_message(message):
                 await message.channel.send('Server Shutdown Complete')
             else:
                 await message.channel.send('Server already off')
-       
+    await client.process_commands(message)
+
+@client.command()
+async def join(ctx):
+    if ctx.message.content.startswith("6join"):
+        await ctx.message.author.voice.channel.connect()
+@client.command()
+async def leave(ctx):
+    if ctx.message.content.startswith("6leave"):
+        await ctx.guild.voice_client.disconnect()
+@client.command()
+async def play(ctx, link):
+    if ctx.message.content.startswith('6play'):
+        try:
+            os.system("rm /silver-vinyl/yownloader.mp3")
+        finally:
+            yt_dlp.YoutubeDL({'format': 'bestaudio/best','outtmpl': '/silver-vinyl/yownloader.%(ext)s','no_playlist': True,'extract_audio': True,'audio_format': 'mp3','prefer_ffmpeg': True,'postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}]}).download(link)
+        try:
+            ctx.message.guild.voice_client.stop()
+        finally:
+            ctx.message.guild.voice_client.play(discord.FFmpegPCMAudio(executable="ffmpeg", source="/silver-vinyl/yownloader.mp3"))
 
 client.run(TOKEN)
