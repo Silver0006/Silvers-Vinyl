@@ -1,8 +1,13 @@
 # Silver's Vinyl
-A discord bot I built in Python for my friends and I to use on our servers.
-
-### Libraries
+### Dependencies
 + [discord.py](https://pypi.org/project/discord.py/)
 + [yt-dlp](https://pypi.org/project/yt-dlp/)
++ [fakeyou](https://pypi.org/project/fakeyou/)
++ [mcstatus](https://pypi.org/project/mcstatus/)
+
+### Features
++ Remotely Start/Stop Minecraft Server
++ Play audio via yt-dlp
+
 
 
